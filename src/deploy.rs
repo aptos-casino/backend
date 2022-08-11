@@ -38,4 +38,10 @@ fn main() -> () {
     let mut tx_hash = client.publish_module(&mut ownerAccount, &module_hex);
     client.rest_client.wait_for_transaction(&tx_hash);
     println!("tx {}",tx_hash.to_string());
+
+    println!("Initialize...");
+    let contractAddress = ownerAccount.address();
+    let mut tx_hash = client.initialize(&contractAddress, &mut ownerAccount);
+    client.rest_client.wait_for_transaction(&tx_hash);
+    println!("tx {}",tx_hash.to_string());
 }

@@ -378,4 +378,18 @@ impl HelloBlockchainClient {
         self.rest_client.execution_transaction_with_payload(account_from, payload)
     }
     //<:!:section_3
+
+    pub fn initialize(
+        &self,
+        contract_address: &str,
+        account_from: &mut Account
+    ) -> String {
+        let payload = serde_json::json!({
+            "type": "script_function_payload",
+            "function": format!("0x{}::Casino::initialize", contract_address),
+            "type_arguments": [],
+            "arguments": []
+        });
+        self.rest_client.execution_transaction_with_payload(account_from, payload)
+    }
 }
