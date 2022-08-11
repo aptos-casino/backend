@@ -1,5 +1,6 @@
 use http_client::HttpClient;
 use http_types::{Method, Request};
+
 use serde_json::json;
 
 async fn call() -> String {
