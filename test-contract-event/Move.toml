@@ -1,0 +1,10 @@
+[package]
+name = "custom-project"
+version = "0.0.0"
+
+[addresses]
+AptosFramework = "0x1"
+CustomTutorial = "60dc5deb0b1e9324e831960489be61bde019292ab96de022ae6217565358e94f"
+
+[dependencies]
+AptosFramework = { local = "aptos-framework" }
