@@ -1,3 +1,5 @@
+use crate::GameVecMutex;
+
 mod seed_hash;
 
 pub struct Game {
@@ -6,7 +8,7 @@ pub struct Game {
     hash: String,
 }
 
-pub fn parse_aptos_event(event: &serde_json::Value, games: &mut Vec<Game>) {
+pub fn parse_aptos_event(event: &serde_json::Value, games: &mut GameVecMutex) {
     // TODO: Here we need to parse event (and think on that how to see difference in event's type)
     // and store it game ID and create seed to keep it
 
@@ -19,6 +21,6 @@ pub fn parse_aptos_event(event: &serde_json::Value, games: &mut Vec<Game>) {
         let seeds: u64 = rand::random::<u64>();
         let hash = seed_hash::get_sha256(&seeds);
 
-        games.push(Game { id, seeds, hash });
+        games.lock().unwrap().push(Game { id, seeds, hash });
     }
 }
