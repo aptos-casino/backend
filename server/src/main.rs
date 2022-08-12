@@ -12,7 +12,7 @@ async fn main() {
     let mut config = utils::load_config().unwrap();
     let account_address = config.pop().unwrap();
 
-    let mut games: Arc<Mutex<Vec<event_parser::Game>>> = Arc::new(Mutex::new(vec![]));
+    let mut games: GameVecMutex = Arc::new(Mutex::new(vec![]));
 
     // TODO: Wrap it with async function for tokio use, maybe with infinite loop
     // Yeah, and don't forget to cut event request on peaces, cause it's looks terrible
