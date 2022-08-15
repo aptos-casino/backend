@@ -1,15 +1,21 @@
+
 use crate::aptos_rpc::*;
 //mod aptos_rpc;
+use std::sync::{Arc, Mutex};
+
 mod aptos_rpc;
 mod event_parser;
+mod loops;
 mod utils;
+
+type GameVecMutex = Arc<Mutex<Vec<event_parser::Game>>>;
 
 #[tokio::main]
 async fn main() {
-    /*  let mut config = utils::load_config().unwrap();
-       let account_address = config.pop().unwrap();
-    */
-    let mut games: Vec<event_parser::Game> = Vec::new();
+    let mut config = utils::load_config().unwrap();
+    let account_address = config.pop().unwrap();
+
+    let mut games: GameVecMutex = Arc::new(Mutex::new(vec![]));
 
     let private_key_contract = hex::decode(
         String::from("db1ae665378f30cd06c7671a510e1c1fd70de94fbbb692b1d7771bcc8e55551c")
@@ -36,11 +42,8 @@ async fn main() {
 
     // TODO: Wrap it with async function for tokio use, maybe with infinite loop
     // Yeah, and don't forget to cut event request on peaces, cause it's looks terrible
-    let event =
-        aptos_rpc::get_event_by_handle(account_address.clone(), event_handle_struct.clone()).await; // Leave it for future
 
-    //event_parser::parse_aptos_event(&event, &mut games);
-    let amount: u64 = 88;
+let amount: u64 = 88;
     let payload = serde_json::json!({
         "type": "script_function_payload",
         "function": format!("0x{}::Casino::set_backend_seed", contract_address),
@@ -54,8 +57,6 @@ async fn main() {
     })
     .await;
     println!("hash {:?}\n", res);
-    let event = aptos_rpc::get_event_by_handle(account_address, event_handle_struct).await; // Leave it for future
-    println!("{:?}", event);
-    // let res = tokio::try_join!(utils::build_rocket().launch());
-    // println!("Error occurs! {}", res.err().unwrap())
+    let res = tokio::try_join!(loops::event_parsing_loop(&account_address, &mut games));
+    println!("Error occurs! {}", res.err().unwrap());
 }
