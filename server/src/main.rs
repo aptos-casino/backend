@@ -17,8 +17,6 @@ async fn main() {
     // TODO: Wrap it with async function for tokio use, maybe with infinite loop
     // Yeah, and don't forget to cut event request on peaces, cause it's looks terrible
 
-
-
-    /*let res = tokio::try_join!(utils::build_rocket().launch());
-    println!("Error occurs! {}", res.err().unwrap())*/
+    let res = tokio::try_join!(loops::event_parsing_loop(&account_address, &mut games));
+    println!("Error occurs! {}", res.err().unwrap())
 }
