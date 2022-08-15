@@ -1,5 +1,6 @@
 use crate::GameVecMutex;
 use serde_json::json;
+use std::str::FromStr;
 
 mod seed_hash;
 
@@ -18,28 +19,24 @@ pub fn parse_aptos_event(
     // Duplicate of new games that may be added in this call, need this for contract calls instead of looking on full vector with all games
     let mut new_games: Vec<Game> = vec![];
 
-    println!("Debug: {}", event);
-    let a1 = event.is_object();
-    let a2 = event.is_array();
-    let a3 = event.is_number();
-    let a4 = event.is_null();
-    let a5 = event.is_string();
-
-    let parsed_ev = String::from(event.as_str().unwrap());
-    let parsed_ev = json!(parsed_ev);
-    let a1 = parsed_ev.is_object();
-    let a2 = parsed_ev.is_array();
-    let a3 = parsed_ev.is_number();
-    let a4 = parsed_ev.is_null();
-    let a5 = parsed_ev.is_string();
-
-
     // Parse if error occur
-    let arr = event.get("message");
-    let events_error = event.as_object().unwrap().get("code");
-    if events_error.is_some()
-    {
-        println!("Error during parsing events, code: {}", events_error.unwrap().as_str().unwrap());
+    if event.is_object() {
+        let events_error = event.as_object().unwrap().get("code");
+        if events_error.is_some() {
+            let code = events_error.unwrap().as_u64().unwrap();
+            let message = event
+                .as_object()
+                .unwrap()
+                .get("message")
+                .unwrap()
+                .as_str()
+                .unwrap();
+            println!(
+                "Error during parsing events, code: {}, message: {}",
+                code, message
+            );
+            return new_games;
+        }
     }
 
     let events_vec = event.as_array().unwrap();
@@ -47,16 +44,18 @@ pub fn parse_aptos_event(
         let data = separate_event.get("data").unwrap();
 
         // TODO: Field may be changed during development
-        let id = data.get("id").unwrap().as_u64().unwrap();
-        let seeds: u64 = rand::random::<u64>();
+        let id = u64::from_str(data.get("game_id").unwrap().as_str().unwrap()).unwrap();
+        let seeds: u64 = rand::random::<u64>(); // Our generation if needed
+        // let seeds = u64::from_str(data.get("seed").unwrap().as_str().unwrap()).unwrap();
         let hash = seed_hash::get_sha256(&seeds);
-        let current_event_id = data.get("sequence_number").unwrap().as_u64().unwrap();
+        let current_event_id = u64::from_str(separate_event.get("sequence_number").unwrap().as_str().unwrap()).unwrap();
 
-        if current_event_id < *event_id {
+        if *event_id > current_event_id{
             continue;
         }
 
         if games.lock().unwrap().iter().any(|val| val.id == id) {
+            println!("Cannot add game, same ID already exist");
             break;
         }
 

@@ -15,7 +15,7 @@ pub(crate) async fn get_event_by_handle(
     );
     let client = http_client::h1::H1Client::new();
     let res = client.send(req).await.unwrap().body_string().await.unwrap();
-    json!(res)
+    serde_json::from_str(res.as_str()).unwrap()
 }
 
 use std::{
@@ -228,13 +228,9 @@ impl RestClient {
         account_from: &mut Account,
         payload: serde_json::Value,
     ) -> String {
-        println!("exec 1");
         let txn_request = self.generate_transaction(&account_from.address(), payload);
-        println!("exec 2 {:?}", txn_request);
         let signed_txn = self.sign_transaction(account_from, txn_request);
-        println!("exec 3");
         let res = self.submit_transaction(&signed_txn);
-        println!("exec 4");
         res.get("hash").unwrap().as_str().unwrap().to_string()
     }
 

@@ -1,6 +1,4 @@
-
 use crate::aptos_rpc::*;
-//mod aptos_rpc;
 use std::sync::{Arc, Mutex};
 
 mod aptos_rpc;
@@ -56,7 +54,7 @@ let amount: u64 = 88;
         client.wait_for_transaction(&*txn_hash)
     })
     .await;
-    println!("hash {:?}\n", res);
-    let res = tokio::try_join!(loops::event_parsing_loop(&account_address, &mut games));
+
+    let res = tokio::try_join!(loops::event_parsing_loop(&contract_address, &mut games));
     println!("Error occurs! {}", res.err().unwrap());
 }
