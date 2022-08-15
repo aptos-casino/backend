@@ -166,7 +166,7 @@ impl RestClient {
         account_from: &mut Account,
         mut txn_request: serde_json::Value,
     ) -> serde_json::Value {
-        println!("self.url {}", self.url);
+        
         let res = reqwest::blocking::Client::new()
             .post(format!("{}/transactions/signing_message", self.url))
             .body(txn_request.to_string())
