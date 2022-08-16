@@ -1,13 +1,11 @@
-use crate::GameVecMutex;
+use crate::{utils, GameVecMutex};
 use std::str::FromStr;
 
-mod seed_hash;
-
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Game {
-    id: u64,
-    seeds: u64,
-    hash: String,
+    pub id: u64,
+    pub seeds: u64,
+    pub hash: String,
 }
 
 pub fn parse_aptos_event(
@@ -45,11 +43,18 @@ pub fn parse_aptos_event(
         // TODO: Field may be changed during development
         let id = u64::from_str(data.get("game_id").unwrap().as_str().unwrap()).unwrap();
         let seeds: u64 = rand::random::<u64>(); // Our generation if needed
-        // let seeds = u64::from_str(data.get("seed").unwrap().as_str().unwrap()).unwrap();
-        let hash = seed_hash::get_sha256(&seeds);
-        let current_event_id = u64::from_str(separate_event.get("sequence_number").unwrap().as_str().unwrap()).unwrap();
+                                                // let seeds = u64::from_str(data.get("seed").unwrap().as_str().unwrap()).unwrap();
+        let hash = utils::get_sha256(seeds);
+        let current_event_id = u64::from_str(
+            separate_event
+                .get("sequence_number")
+                .unwrap()
+                .as_str()
+                .unwrap(),
+        )
+        .unwrap();
 
-        if *event_id > current_event_id{
+        if *event_id > current_event_id {
             continue;
         }
 
