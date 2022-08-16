@@ -1,13 +1,12 @@
-use crate::event_parser::Game;
+
 use crate::{aptos_rpc::*, event_parser, utils, GameVecMutex};
 use std::sync::{Arc, Mutex};
 use std::{thread, time::Duration};
 
 pub async fn event_parsing_loop(
-    /*
-    account_address: &String, */
     games: &mut GameVecMutex,
 ) -> Result<(), &'static str> {
+    // This is latest sequence id of event that has unique game id
     let mut latest_event_id: u64 = 0;
 
     let private_key_contract = hex::decode(
@@ -57,7 +56,7 @@ pub async fn event_parsing_loop(
 pub fn get_payload(
     games: &mut GameVecMutex,
     contract_address: &String,
-    game: &Game,
+    game: &event_parser::Game,
 ) -> serde_json::Value {
     //if there is no such game in the vector, the current event is not a 'game start'
     if games
