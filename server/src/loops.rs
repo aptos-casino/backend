@@ -20,7 +20,7 @@ pub async fn event_parsing_loop(games: &mut GameVecMutex) -> Result<(), &'static
 
     loop {
         let event_handle_struct = String::from("0xce8bd5e351eb3639e2a41b323d707b0ecc486479e4963fbbe4ff7f8ed0469007::Casino::EventsStore/inited_backend_seed_event");
-        let event = get_event_by_handle(account_address.clone(), event_handle_struct).await; // Leave it for future
+        let mut event = get_event_by_handle(account_address.clone(), event_handle_struct).await; // Leave it for future
         let res = event_parser::parse_aptos_event(&mut event, games, &mut latest_event_id);
 
         if !res.is_empty() {
