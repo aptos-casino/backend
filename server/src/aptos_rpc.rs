@@ -1,8 +1,6 @@
 use http_client::HttpClient;
 use http_types::{Method, Request};
 
-use serde_json::json;
-
 pub const DEVNET: &str = "https://fullnode.devnet.aptoslabs.com";
 
 pub(crate) async fn get_event_by_handle(
