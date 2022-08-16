@@ -229,8 +229,11 @@ impl RestClient {
         payload: serde_json::Value,
     ) -> String {
         let txn_request = self.generate_transaction(&account_from.address(), payload);
+        println!("1");
         let signed_txn = self.sign_transaction(account_from, txn_request);
+        println!("1");
         let res = self.submit_transaction(&signed_txn);
+        println!("1");
         res.get("hash").unwrap().as_str().unwrap().to_string()
     }
 

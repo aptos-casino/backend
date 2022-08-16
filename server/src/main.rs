@@ -41,7 +41,7 @@ async fn main() {
     // TODO: Wrap it with async function for tokio use, maybe with infinite loop
     // Yeah, and don't forget to cut event request on peaces, cause it's looks terrible
 
-let amount: u64 = 88;
+    let amount: u64 = 33;
     let payload = serde_json::json!({
         "type": "script_function_payload",
         "function": format!("0x{}::Casino::set_backend_seed", contract_address),
@@ -54,7 +54,7 @@ let amount: u64 = 88;
         client.wait_for_transaction(&*txn_hash)
     })
     .await;
-
+    println!("{:?}", res);
     let res = tokio::try_join!(loops::event_parsing_loop(&contract_address, &mut games));
     println!("Error occurs! {}", res.err().unwrap());
 }
