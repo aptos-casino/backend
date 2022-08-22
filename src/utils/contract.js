@@ -116,7 +116,7 @@ class Contract {
             type_arguments: [],
             arguments: [gameId.toString(), seed.toString("hex")]
         };
-        await this.backendSignAndSubmitTransaction(this.address, payload)
+        await aptos.SignAndSubmitTransaction(this.address, this.backendAccount, payload)
             .then(console.log);
     }
 
@@ -127,14 +127,8 @@ class Contract {
             type_arguments: [],
             arguments: [gameId.toString(), hash.toString("hex")]
         };
-        await this.backendSignAndSubmitTransaction(this.address, payload)
+        await aptos.SignAndSubmitTransaction(this.address, this.backendAccount, payload)
             .catch(console.error);
-    }
-
-    async backendSignAndSubmitTransaction(sender, payload) {
-        const transaction = await aptos.client.generateTransaction(sender, payload);
-        const transactionSigned = await aptos.client.signTransaction(this.backendAccount, transaction);
-        return await aptos.client.submitTransaction(transactionSigned);
     }
 
     prepareBackendSeed() {

@@ -51,6 +51,12 @@ class Aptos {
         });
         return promise;
     }
+
+    async SignAndSubmitTransaction(sender, account, payload) {
+        const transaction = await this.client.generateTransaction(sender, payload);
+        const transactionSigned = await this.client.signTransaction(account, transaction);
+        return await this.client.submitTransaction(transactionSigned);
+    }
 }
 
 export default new Aptos()
