@@ -1,9 +1,12 @@
-import aptos from '@/utils/aptos';
-import Contract from "@/utils/contract";
+import aptos from './utils/aptos.js';
+import Contract from "./utils/contract.js";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 (async () => {
     await aptos.updateClient(process.env.FULL_NODE_URL);
 
-    const contract = new Contract(process.env.CONTRACT_ADDRESS);
+    const contract = new Contract();
     contract.handleEvents();
 })()

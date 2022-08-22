@@ -1,22 +1,22 @@
-import aptos from "./utils/aptos";
+import aptos from "./aptos.js";
 import {AptosAccount, HexString} from "aptos";
-import {sha3_256} from "js-sha3";
+import js_sha3 from "js-sha3";
+import assert from "assert";
+const {sha3_256} = js_sha3;
 
 class Contract {
-    constructor(address) {
-        this.address = address;
-        this.backendConstructor();
+    constructor() {
         this.onStartGame = this.onStartGame.bind(this)
         this.onInitedBackendSeedHashes = this.onInitedBackendSeedHashes.bind(this)
         this.onInitedClientSeedHashes = this.onInitedClientSeedHashes.bind(this)
         this.onInitedBackendSeed = this.onInitedBackendSeed.bind(this)
         this.onInitedClientSeed = this.onInitedClientSeed.bind(this)
         this.onCompletedGameEvent = this.onCompletedGameEvent.bind(this)
-        this.getGameState = this.getGameState.bind(this)
 
         this.backendPrivateKey = process.env.PRIVATE_KEY;
-        this.backendAddress = process.env.CONTRACT_ADDRESS;
-        this.backendAccount = new AptosAccount(new HexString(this.backendPrivateKey).toUint8Array(), this.backendAddress);
+        this.address = process.env.CONTRACT_ADDRESS;
+        assert(!!this.backendPrivateKey && !!this.address, "Wrong env")
+        this.backendAccount = new AptosAccount(new HexString(this.backendPrivateKey).toUint8Array(), this.address);
         this.backendSeeds = {};
         this.gameIdToSeedHash = {};
     }
@@ -112,22 +112,22 @@ class Contract {
     async SetBackendSeed(gameId, seed) {
         const payload = {
             type: "script_function_payload",
-            function: `${this.backendAddress}::Casino::set_backend_seed`,
+            function: `${this.address}::Casino::set_backend_seed`,
             type_arguments: [],
             arguments: [gameId.toString(), seed.toString("hex")]
         };
-        await this.backendSignAndSubmitTransaction(this.backendAddress, payload)
+        await this.backendSignAndSubmitTransaction(this.address, payload)
             .then(console.log);
     }
 
     async SetBackendSeedHash(gameId, hash) {
         const payload = {
             type: "script_function_payload",
-            function: `${this.backendAddress}::Casino::set_backend_seed_hash`,
+            function: `${this.address}::Casino::set_backend_seed_hash`,
             type_arguments: [],
             arguments: [gameId.toString(), hash.toString("hex")]
         };
-        await this.backendSignAndSubmitTransaction(this.backendAddress, payload)
+        await this.backendSignAndSubmitTransaction(this.address, payload)
             .catch(console.error);
     }
 

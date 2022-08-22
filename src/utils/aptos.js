@@ -1,5 +1,5 @@
 import {AptosClient} from "aptos";
-import fetch from "./api";
+import fetch from "./api.js";
 
 class Aptos {
     constructor() {
@@ -30,7 +30,7 @@ class Aptos {
                     resolve,
                     url
                 } = this.pullEventsQueue.pop();
-                resolve(await fetch(url));
+                resolve(await fetch(url).catch(console.error));
             }
             setTimeout(pool, 500);
         }
@@ -39,7 +39,7 @@ class Aptos {
 
     async getEvent(address, sender, eventHandleStruct, fieldName, from, limit) {
         const promise = new Promise(async (resolve, reject) => {
-            let url = this.url + "/accounts/" + sender.replace("0x", "")
+            let url = this.url + "/v1/accounts/" + sender.replace("0x", "")
                 + "/events/" + address + "::" + eventHandleStruct
                 + "/" + fieldName
                 + "?start=" + String(from)
