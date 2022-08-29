@@ -39,7 +39,7 @@ class Aptos {
 
     async getEvent(address, sender, eventHandleStruct, fieldName, from, limit) {
         const promise = new Promise(async (resolve, reject) => {
-            let url = this.url + "/v1/accounts/" + sender.replace("0x", "")
+            let url = this.url + "/accounts/" + sender.replace("0x", "")
                 + "/events/" + address + "::" + eventHandleStruct
                 + "/" + fieldName
                 + "?start=" + String(from)
