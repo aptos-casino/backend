@@ -111,10 +111,10 @@ class Contract {
 
     async SetBackendSeed(gameId, seed) {
         const payload = {
-            type: "script_function_payload",
+            type: "entry_function_payload",
             function: `${this.address}::Casino::set_backend_seed`,
             type_arguments: [],
-            arguments: [gameId.toString(), seed.toString("hex")]
+            arguments: [BigInt(gameId), seed.toString("hex")]
         };
         await aptos.SignAndSubmitTransaction(this.address, this.backendAccount, payload)
             .then(console.log);
@@ -122,10 +122,10 @@ class Contract {
 
     async SetBackendSeedHash(gameId, hash) {
         const payload = {
-            type: "script_function_payload",
+            type: "entry_function_payload",
             function: `${this.address}::Casino::set_backend_seed_hash`,
             type_arguments: [],
-            arguments: [gameId.toString(), hash.toString("hex")]
+            arguments: [BigInt(gameId), hash.toString("hex")]
         };
         await aptos.SignAndSubmitTransaction(this.address, this.backendAccount, payload)
             .catch(console.error);
