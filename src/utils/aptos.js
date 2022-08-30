@@ -32,9 +32,9 @@ class Aptos {
                 } = this.pullEventsQueue.pop();
                 resolve(await fetch(url).catch(console.error));
             }
-            setTimeout(pool, 500);
+            setTimeout(pool, 1500);
         }
-        setTimeout(pool, 500);
+        setTimeout(pool, 1500);
     }
 
     async getEvent(address, sender, eventHandleStruct, fieldName, from, limit) {
@@ -53,6 +53,7 @@ class Aptos {
     }
 
     async SignAndSubmitTransaction(sender, account, payload) {
+        console.log('payload', payload)
         const transaction = await this.client.generateTransaction(sender, payload);
         const transactionSigned = await this.client.signTransaction(account, transaction);
         return await this.client.submitTransaction(transactionSigned);
