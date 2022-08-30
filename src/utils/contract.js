@@ -61,7 +61,7 @@ class Contract {
         const gameId = eventData.data["game_id"];
 
         const setupSeedHash = async () => {
-            if (!this.oldGame[gameId]) {
+            if (this.oldGame[gameId] === undefined) {
                 const {hash} = this.prepareBackendSeed();
                 this.gameIdToSeedHash[gameId] = hash;
                 await this.SetBackendSeedHash(gameId, hash);
@@ -132,7 +132,7 @@ class Contract {
             arguments: [BigInt(gameId), seed]
         };
         await aptos.SignAndSubmitTransaction(this.address, this.backendAccount, payload)
-            .then(console.log);
+            .then(console.log).catch(console.error);
     }
 
     async SetBackendSeedHash(gameId, hash) {
@@ -143,7 +143,7 @@ class Contract {
             arguments: [BigInt(gameId), hash]
         };
         await aptos.SignAndSubmitTransaction(this.address, this.backendAccount, payload)
-            .catch(console.error);
+            .then(console.log).catch(console.error);
     }
 
     prepareBackendSeed() {
