@@ -4,7 +4,7 @@ version = "0.0.0"
 
 [addresses]
 AptosFramework = "0x1"
-CustomTutorial = "60dc5deb0b1e9324e831960489be61bde019292ab96de022ae6217565358e94f"
+CustomTutorial = "9bf90ebe68260e4d984a63db4b9e8a3bfed6111bbd28cef87830bde17f8d5e15"
 
 [dependencies]
-AptosFramework = { local = "aptos-framework" }
+AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-framework/", rev = "aptos-node-v1.2.5" }

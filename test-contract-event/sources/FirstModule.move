@@ -1,6 +1,7 @@
 module CustomTutorial::CustomContract {
     use aptos_std::event;
     use std::signer;
+    use aptos_framework::account::new_event_handle;
 
     struct MessageHolder has key {
         message_change_events: event::EventHandle<CustomEvent>,
@@ -13,7 +14,7 @@ module CustomTutorial::CustomContract {
     entry fun init_module(creator: &signer) {
         move_to(
             creator,
-            MessageHolder { message_change_events: event::new_event_handle<CustomEvent>(creator) }
+            MessageHolder { message_change_events: new_event_handle<CustomEvent>(creator) }
         );
     }
 
@@ -21,7 +22,7 @@ module CustomTutorial::CustomContract {
         let account_addr = signer::address_of(&account);
         if (!exists<MessageHolder>(account_addr)) {
             move_to(&account, MessageHolder {
-                message_change_events: event::new_event_handle<CustomEvent>(&account),
+                message_change_events: new_event_handle<CustomEvent>(&account),
             })
         } else {
             let old_message_holder = borrow_global_mut<MessageHolder>(account_addr);
