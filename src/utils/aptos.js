@@ -54,7 +54,7 @@ class Aptos {
 
     async SignAndSubmitTransaction(sender, account, payload) {
         console.log('payload', payload)
-        const transaction = await this.client.generateTransaction(sender, payload);
+        const transaction = await this.client.generateTransaction(sender, payload, {gas_unit_price: 100});
         const transactionSigned = await this.client.signTransaction(account, transaction);
         return await this.client.submitTransaction(transactionSigned);
     }
